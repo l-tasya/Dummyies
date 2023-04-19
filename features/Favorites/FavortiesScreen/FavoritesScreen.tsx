@@ -1,14 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
-import MealsList from "../../components/MealList/MealsList";
-import {useContext} from "react";
-import {FavoritesContext} from "../../app/favorites-context";
-import {MEALS} from "../../data/dummy-data";
-import Colors from "../../utils/Colors";
+import MealsList from "../../../components/MealList/MealsList";
+import {MEALS} from "../../../data/dummy-data";
+import Colors from "../../../utils/Colors";
 import {LinearGradient} from "expo-linear-gradient";
+import {useSelector} from "react-redux";
+import {AppRootState} from "../../../app/store";
 
 const FavoritesScreen = () => {
-    const favoriteMealsCtx = useContext(FavoritesContext)
-    const favoriteMeals = MEALS.filter(meal => favoriteMealsCtx.ids.includes(meal.id))
+    const favoriteIds = useSelector<AppRootState, string[]>(t => t.favorites.ids)
+
+    const favoriteMeals = MEALS.filter(meal => favoriteIds.includes(meal.id))
     if (favoriteMeals.length === 0) {
         return (
             < LinearGradient
@@ -18,7 +19,7 @@ const FavoritesScreen = () => {
                     <Text style={styles.title}>You have no favorite meals yet.</Text>
                 </View>
             </LinearGradient>
-    )
+        )
     }
     return <MealsList items={favoriteMeals}/>
 

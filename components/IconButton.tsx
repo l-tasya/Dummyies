@@ -1,7 +1,15 @@
 import {Pressable, StyleSheet} from "react-native";
 import {Ionicons} from '@expo/vector-icons'
+import React from "react";
 
-const IconButton = ({icon,color,onPress}) => {
+interface IProps {
+    icon: any
+    color: string
+    onPress: ()=>void
+}
+
+
+const IconButton: React.FC<IProps> = ({icon,color,onPress}) => {
     const clickHandler = () =>{
         onPress()
     }

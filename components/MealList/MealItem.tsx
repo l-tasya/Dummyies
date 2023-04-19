@@ -1,12 +1,18 @@
-import {Image, Pressable, StyleSheet, Text, View} from "react-native";
-import {shadowStyles} from "../../assets/style";
+import {Image, Platform, Pressable, StyleSheet, Text, View} from "react-native";
 import MealDetails from "../MealDetails";
+import React from "react";
+import {IMeal} from "../../data/dummy-data";
 
-const  MealItem = ({item, onPress}) => {
+interface IProps {
+    item: IMeal
+    onPress: () => void
+}
+
+const MealItem: React.FC<IProps> = ({item, onPress}) => {
     return (
         <View style={styles.mealItem}>
             <Pressable android_ripple={{color: '#ccc'}}
-                       style={({pressed}) => [styles.button, pressed && styles.buttonPressed]}
+                       style={({pressed}) => [pressed && styles.buttonPressed]}
                        onPress={onPress}
             >
                 <View style={styles.innerContainer}>
@@ -14,7 +20,8 @@ const  MealItem = ({item, onPress}) => {
                         <Image style={styles.image} source={{uri: item.imageUrl}}/>
                         <Text style={styles.title}>{item.title}</Text>
                     </View>
-               <MealDetails duration={item.duration} affordability={item.affordability} complexity={item.complexity}/>
+                    <MealDetails duration={item.duration} affordability={item.affordability}
+                                 complexity={item.complexity}/>
                     <View>
 
                     </View>
@@ -30,7 +37,12 @@ const styles = StyleSheet.create({
         margin: 16,
         borderRadius: 16,
         backgroundColor: 'white',
-        ...shadowStyles
+        elevation: 4,
+        overflow: Platform.OS === 'android' ? "hidden" : "visible",
+        //    IOS
+        shadowColor: 'black',
+        shadowOpacity: 0.6,
+        shadowRadius: 8,
     },
     image: {
         width: '100%',

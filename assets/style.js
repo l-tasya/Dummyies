@@ -6,7 +6,7 @@ const shadowStyles = {
     overflow: Platform.OS === 'android'? "hidden":"visible",
     //    IOS
     shadowColor: 'black',
-    shadowOpacity: {width: 0, height:2},
+    shadowOpacity: 0.6,
     shadowRadius: 8,
 }
 

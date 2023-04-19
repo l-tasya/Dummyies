@@ -1,7 +1,14 @@
 import React from 'react';
 import {StyleSheet, Text, View} from "react-native";
 
-const List = ({title, data, numeric = false}) => {
+interface IProps {
+    title: string,
+    numeric?: boolean
+    data: string[]
+}
+
+
+const List: React.FC<IProps> = ({title, data, numeric = false}) => {
     return <View style={styles.container}>
         <View style={styles.titleContainer}>
             <Text style={styles.title}>{title}</Text>

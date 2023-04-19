@@ -1,23 +1,35 @@
-import {Image, ScrollView, StyleSheet, Text, View} from "react-native";
-import {useContext, useLayoutEffect} from "react";
+import {Image, Platform, ScrollView, StyleSheet, Text, View} from "react-native";
+import React, {useLayoutEffect} from "react";
 import Colors from "../../utils/Colors";
 import MealDetails from "../../components/MealDetails";
 import {LinearGradient} from "expo-linear-gradient";
-import {shadowStyles} from "../../assets/style";
 import List from "../../components/List";
 import IconButton from "../../components/IconButton";
-import {FavoritesContext} from "../../app/favorites-context";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootState} from "../../app/store";
+import {RootStackParamList} from "../../App";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
+import {RouteProp, useNavigation, useRoute} from "@react-navigation/native";
+import {favoritesActions} from "../Favorites";
+import {useActions} from "../../utils/redux-utils";
 
-const MealDetailsScreen = ({navigation, route}) => {
+const MealDetailsScreen = () => {
+    const dispatch = useDispatch();
+    const {addFavorites, removeFavorites} = useActions(favoritesActions)
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+    const route = useRoute<RouteProp<RootStackParamList, 'MealsDetails'>>()
+
+
     let meal = route.params.meal
     let mealID = meal.id
-    const favoritesCtx = useContext(FavoritesContext)
-    const mealIsFavoriteValue = favoritesCtx.ids.includes(mealID)
+    const favoriteIds = useSelector<AppRootState, string[]>(t => t.favorites.ids)
+    const mealIsFavoriteValue = favoriteIds.includes(mealID)
     const changeFavoriteStatusHandler = () => {
         if (mealIsFavoriteValue) {
-            favoritesCtx.removeFavorite(mealID)
+            dispatch(removeFavorites({id: mealID}))
         } else {
-            favoritesCtx.addFavorite(mealID)
+            dispatch(addFavorites({id: mealID}))
+            console.log(favoriteIds)
         }
     }
     useLayoutEffect(() => {
@@ -33,7 +45,7 @@ const MealDetailsScreen = ({navigation, route}) => {
                 />
             }
         })
-    }, [navigation, meal.title, mealIsFavoriteValue])
+    }, [navigation, meal.title, mealIsFavoriteValue, mealID, favoriteIds])
     return (
         <LinearGradient colors={[Colors.primary700, Colors.primary600, Colors.accent500]} style={styles.container}>
             <ScrollView style={styles.container}>
@@ -68,7 +80,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginVertical: 10,
         borderRadius: 18,
-        ...shadowStyles,
+        elevation: 4,
+        overflow: Platform.OS === 'android' ? "hidden" : "visible",
+        //    IOS
+        shadowColor: 'black',
+        shadowOpacity: 0.6,
+        shadowRadius: 8,
     },
     title: {
         fontStyle: 'italic',
@@ -80,7 +97,12 @@ const styles = StyleSheet.create({
     box: {
         marginHorizontal: 20,
         borderRadius: 8,
-        ...shadowStyles,
+        elevation: 4,
+        overflow: Platform.OS === 'android' ? "hidden" : "visible",
+        //    IOS
+        shadowColor: 'black',
+        shadowOpacity: 0.6,
+        shadowRadius: 8,
         backgroundColor: 'white',
     },
 

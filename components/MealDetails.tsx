@@ -1,8 +1,15 @@
 import React from 'react';
-import {View, Text, StyleSheet} from "react-native";
+import {StyleSheet, Text, TextStyle, View, ViewStyle} from "react-native";
 
+interface IProps {
+    duration: number
+    complexity: string
+    affordability: string
+    style?: ViewStyle
+    textStyle?: TextStyle
+}
 
-const MealDetails = ({duration, complexity, affordability, style,textStyle}) => {
+const MealDetails: React.FC<IProps> = ({duration, complexity, affordability, style, textStyle}) => {
     return (
         <View style={[styles.details, style]}>
             <Text style={[styles.detailItem, textStyle]}>{duration}m</Text>

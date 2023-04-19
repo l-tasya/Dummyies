@@ -1,4 +1,4 @@
-import {Button, StatusBar} from 'react-native';
+import {StatusBar} from 'react-native';
 import {NavigationContainer} from "@react-navigation/native";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import 'react-native-gesture-handler';
@@ -7,16 +7,25 @@ import Colors from "./utils/Colors";
 import CategoriesScreen from "./features/Categories/CategoriesScreen";
 import MealsOverviewScreen from "./features/Categories/MealsOverviewScreen";
 import MealDetailsScreen from "./features/Categories/MealDetailsScreen";
-import FavoritesScreen from "./features/Favorites/FavoritesScreen";
+import FavoritesScreen from "./features/Favorites/FavortiesScreen/FavoritesScreen";
 import {Ionicons} from "@expo/vector-icons";
-import {FavoritesContextProvider} from "./app/favorites-context";
+import {Provider} from "react-redux";
+import {store} from "./app/store";
+import React from "react";
+import {IMeal} from "./data/dummy-data";
 
-const Stack = createNativeStackNavigator();
 
-export default function App() {
+export type RootStackParamList = {
+    MealsCategories: undefined
+    MealsOverview: { categoryID: string }
+    MealsDetails: { meal: IMeal }
+};
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const App: React.FC = () => {
     return (<>
-            <StatusBar style={'light'}/>
-            <FavoritesContextProvider>
+            <StatusBar barStyle={'light-content'}/>
+            <Provider store={store}>
                 <NavigationContainer>
                     <Stack.Navigator screenOptions={{
                         headerStyle: {
@@ -25,32 +34,19 @@ export default function App() {
                         headerTintColor: 'white',
                         contentStyle: {backgroundColor: Colors.accent500}
                     }}>
-                        <Stack.Screen
-                            name={'MealsCategories'}
-                            component={DrawerNavigator}
-                            options={{
-                                headerShown: false,
-                            }}/>
-                        <Stack.Screen
-                            name={'MealsOverview'}
-                            component={MealsOverviewScreen}
-                        />
-                        <Stack.Screen
-                            name={'MealsDetails'}
-                            component={MealDetailsScreen}
-                            options={{
-                                headerRight: () => {
-                                    return <Button onPress title={'Tap Me'}/>
-                                }
-                            }}
+                        <Stack.Screen name="MealsCategories" component={DrawerNavigator} options={{
+                            headerShown: false,
+                        }}/>
+                        <Stack.Screen name="MealsOverview" component={MealsOverviewScreen}/>
+                        <Stack.Screen name="MealsDetails" component={MealDetailsScreen}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>
-            </FavoritesContextProvider>
+            </Provider>
         </>
+
     );
 }
-
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
@@ -59,20 +55,19 @@ function DrawerNavigator() {
             backgroundColor: Colors.primary800,
         },
         headerTintColor: 'white',
-        contentStyle: {backgroundColor: Colors.accent500},
         drawerActiveBackgroundColor: Colors.primary700,
         drawerActiveTintColor: 'white',
 
     }}>
         <Drawer.Screen
-            name={'Categories'}
+            name="Categories"
             component={CategoriesScreen}
             options={{
                 drawerIcon: ({color, size}) => <Ionicons name='list' color={color} size={size}/>
             }}
         />
         <Drawer.Screen
-            name={'Favorites'}
+            name="Favorites"
             component={FavoritesScreen}
             options={{
                 drawerIcon: ({color, size}) => <Ionicons name='star' color={color} size={size}/>
@@ -80,3 +75,6 @@ function DrawerNavigator() {
         />
     </Drawer.Navigator>
 }
+
+
+export default App;

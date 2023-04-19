@@ -1,6 +1,20 @@
 import Category from './models/category';
 import Meal from './models/meal';
-
+export interface IMeal {
+    id: string;
+    categoryIds: Array<string>;
+    title: string;
+    affordability: string;
+    complexity: string;
+    imageUrl: string;
+    duration: number;
+    ingredients: Array<string>;
+    steps: Array<string>;
+    isGlutenFree: boolean;
+    isVegan: boolean;
+    isVegetarian: boolean;
+    isLactoseFree: boolean;
+}
 export const CATEGORIES = [
     new Category('c1', 'Italian', '#f5428d'),
     new Category('c2', 'Quick & Easy', '#f54242'),
